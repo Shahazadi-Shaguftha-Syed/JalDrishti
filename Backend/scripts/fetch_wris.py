@@ -8,6 +8,7 @@ Usage: python scripts/fetch_wris.py --from 2024-01-01 --to 2026-08-13 --workers 
 """
 import argparse
 import json
+import ssl
 import statistics
 import sys
 import threading
@@ -17,6 +18,18 @@ import urllib.request
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+# python.org builds ship no CA bundle of their own — unlike the system Python,
+# they cannot read the macOS keychain — so verification of the WRIS certificate
+# fails inside a venv with "self-signed certificate in certificate chain".
+# certifi supplies the missing roots. Verification stays on either way; do not
+# swap this for _create_unverified_context, which disables it process-wide.
+try:
+    import certifi
+
+    SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+except ImportError:
+    SSL_CONTEXT = ssl.create_default_context()
 
 API = "https://indiawris.gov.in/Dataset/Ground%20Water%20Level"
 DISTRICTS_URL = "https://raw.githubusercontent.com/sab99r/Indian-States-And-Districts/master/states-and-districts.json"
@@ -35,7 +48,7 @@ def _post(payload, tries=3):
             req = urllib.request.Request(
                 API, body, {"Content-Type": "application/x-www-form-urlencoded"}
             )
-            with urllib.request.urlopen(req, timeout=180) as r:
+            with urllib.request.urlopen(req, timeout=180, context=SSL_CONTEXT) as r:
                 return json.load(r).get("data") or []
         except Exception:
             # WRIS truncates large chunked responses under load (IncompleteRead),
@@ -113,7 +126,7 @@ def main():
     args = ap.parse_args()
 
     OUT.mkdir(exist_ok=True)
-    with urllib.request.urlopen(DISTRICTS_URL, timeout=60) as r:
+    with urllib.request.urlopen(DISTRICTS_URL, timeout=60, context=SSL_CONTEXT) as r:
         catalog = json.load(r)["states"]
     only = {s.strip().lower() for s in args.states.split(",") if s.strip()}
     pairs = [

@@ -48,7 +48,7 @@ interface TrendPoint {
 const StationRow = ({ s, rank }: { s: Station; rank: number }) => (
   <Pressable
     onPress={() => router.push({ pathname: '/(tabs)/analytics', params: { code: s.code } })}
-    style={tw`flex-row items-center py-2.5 px-3 border-b border-slate-100 hover:bg-slate-50 rounded-xl transition-all`}>
+    style={tw`flex-row items-center py-2.5 px-3 border-b border-slate-100 hover:bg-slate-50 rounded-xl`}>
     <View
       style={[
         tw`w-6 h-6 rounded-lg items-center justify-center mr-3`,
@@ -156,7 +156,7 @@ export default function DashboardScreen() {
             return (
               <View
                 key={chip.label}
-                style={tw`flex-row items-center bg-white border border-slate-200/90 rounded-full px-2.5 py-0.5 mr-2 mb-1 shadow-2xs`}>
+                style={tw`flex-row items-center bg-white border border-slate-200/90 rounded-full px-2.5 py-0.5 mr-2 mb-1`}>
                 <Icon size={11} color="#0284c7" strokeWidth={2} style={tw`mr-1.5`} />
                 <Text style={tw`text-[10px] font-semibold text-slate-700`}>{chip.label}</Text>
               </View>

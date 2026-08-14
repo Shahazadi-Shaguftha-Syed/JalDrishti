@@ -84,9 +84,9 @@ const NavItem = ({
     <Pressable
       onPress={() => router.push(item.route as any)}
       style={[
-        tw`flex-row items-center rounded-xl px-3 py-2.5 mb-1.5 transition-all`,
+        tw`flex-row items-center rounded-xl px-3 py-2.5 mb-1.5`,
         active
-          ? tw`bg-sky-500/15 border border-sky-400/30 shadow-xs`
+          ? tw`bg-sky-500/15 border border-sky-400/30`
           : tw`hover:bg-slate-800/60 border border-transparent`,
         collapsed ? tw`justify-center px-0` : tw``,
       ]}>
@@ -124,13 +124,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Distinct Contrasting Sidebar Navigation */}
       <View
         style={[
-          tw`bg-[#0b1329] px-3.5 py-5 justify-between border-r border-slate-800/80 relative shadow-lg`,
-          { width: collapsed ? COLLAPSED : EXPANDED },
+          tw`bg-[#0b1329] px-3.5 py-5 justify-between border-r border-slate-800/80 relative`,
+          {
+            width: collapsed ? COLLAPSED : EXPANDED,
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+          },
         ]}>
         <View>
           {/* Logo & Brand Header */}
           <View style={tw`flex-row items-center px-1 mb-6`}>
-            <View style={tw`w-9 h-9 rounded-xl bg-sky-500 items-center justify-center shadow-md shadow-sky-500/30`}>
+            <View
+              style={[
+                tw`w-9 h-9 rounded-xl bg-sky-500 items-center justify-center`,
+                { boxShadow: '0 4px 6px -1px rgba(14, 165, 233, 0.3), 0 2px 4px -2px rgba(14, 165, 233, 0.3)' },
+              ]}>
               <Droplets size={19} color="#fff" strokeWidth={2} />
             </View>
             {!collapsed && (
@@ -189,7 +196,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           {/* Collapse Button Drawer Tab */}
           <Pressable
             onPress={() => setCollapsed((c) => !c)}
-            style={tw`mt-1 flex-row items-center justify-center rounded-xl py-1.5 bg-slate-850 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition-all`}>
+            style={tw`mt-1 flex-row items-center justify-center rounded-xl py-1.5 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50`}>
             {collapsed ? (
               <ChevronRight size={14} color="#94a3b8" strokeWidth={2} />
             ) : (
@@ -201,7 +208,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main Content Workspace Container Frame */}
       <View style={tw`flex-1 p-3.5 bg-[#f1f3f6] overflow-hidden`}>
-        <View style={tw`flex-1 bg-white rounded-[24px] border border-slate-200/90 shadow-sm overflow-hidden flex-col`}>
+        <View
+          style={[
+            tw`flex-1 bg-white rounded-[24px] border border-slate-200/90 overflow-hidden flex-col`,
+            { boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' },
+          ]}>
           {/* Main Top Header */}
           <View
             style={tw`flex-row items-center justify-between px-7 py-4.5 border-b border-slate-100 bg-white`}>
@@ -225,7 +236,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </Text>
               </View>
 
-              <View style={tw`flex-row items-center bg-white border border-slate-200/90 rounded-full px-3 py-1 shadow-2xs`}>
+              <View style={tw`flex-row items-center bg-white border border-slate-200/90 rounded-full px-3 py-1`}>
                 <View style={tw`w-2 h-2 rounded-full bg-sky-500 mr-2`} />
                 <Text style={tw`text-[10px] text-slate-700 font-semibold uppercase tracking-wider`}>
                   LIVE ENGINE ACTIVE

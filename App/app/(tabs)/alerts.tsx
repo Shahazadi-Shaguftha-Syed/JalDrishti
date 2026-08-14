@@ -24,7 +24,7 @@ type Tab = 'depletion' | 'sensor';
 const AlertRow = ({ s, kind }: { s: Station; kind: Tab }) => (
   <Pressable
     onPress={() => router.push({ pathname: '/(tabs)/analytics', params: { code: s.code } })}
-    style={tw`py-3 px-3 border-b border-slate-100 hover:bg-slate-50 rounded-xl transition-all`}>
+    style={tw`py-3 px-3 border-b border-slate-100 hover:bg-slate-50 rounded-xl`}>
     <View style={tw`flex-row items-start justify-between`}>
       <View style={tw`flex-1 pr-3`}>
         <View style={tw`flex-row items-center flex-wrap`}>
@@ -147,7 +147,7 @@ export default function AlertsScreen() {
                 key={t.key}
                 onPress={() => setTab(t.key as Tab)}
                 style={[
-                  tw`flex-1 flex-row items-center justify-center py-2.5 rounded-xl transition-all shadow-2xs`,
+                  tw`flex-1 flex-row items-center justify-center py-2.5 rounded-xl`,
                   active ? tw`bg-white` : tw`bg-transparent`,
                 ]}>
                 <Icon

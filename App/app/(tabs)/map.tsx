@@ -77,7 +77,7 @@ export default function MapScreen() {
         <Pressable
           onPress={() => setMode('stations')}
           style={[
-            tw`flex-row items-center px-3.5 py-1.5 rounded-xl mr-2.5 border shadow-2xs transition-all`,
+            tw`flex-row items-center px-3.5 py-1.5 rounded-xl mr-2.5 border`,
             mode === 'stations'
               ? tw`bg-sky-50 border-sky-300 text-sky-700`
               : tw`bg-white border-slate-200 text-slate-600`,
@@ -100,7 +100,7 @@ export default function MapScreen() {
         <Pressable
           onPress={() => setMode('area')}
           style={[
-            tw`flex-row items-center px-3.5 py-1.5 rounded-xl border shadow-2xs transition-all`,
+            tw`flex-row items-center px-3.5 py-1.5 rounded-xl border`,
             mode === 'area'
               ? tw`bg-sky-50 border-sky-300 text-sky-700`
               : tw`bg-white border-slate-200 text-slate-600`,
@@ -140,7 +140,7 @@ export default function MapScreen() {
               key={f.key}
               onPress={() => setCategory(f.key)}
               style={[
-                tw`flex-row items-center px-3 py-1 mr-2 rounded-full border shadow-2xs`,
+                tw`flex-row items-center px-3 py-1 mr-2 rounded-full border`,
                 active
                   ? { backgroundColor: color, borderColor: color }
                   : tw`bg-white border-slate-200`,
@@ -174,7 +174,7 @@ export default function MapScreen() {
           style={[
             tw`px-3 py-1 mr-2 rounded-lg border justify-center`,
             !state
-              ? tw`bg-slate-900 border-slate-900 shadow-2xs`
+              ? tw`bg-slate-900 border-slate-900`
               : tw`bg-white border-slate-200`,
           ]}>
           <Text style={[tw`text-xs font-medium`, !state ? tw`text-white font-semibold` : tw`text-slate-700`]}>
@@ -188,7 +188,7 @@ export default function MapScreen() {
             style={[
               tw`px-3 py-1 mr-2 rounded-lg border justify-center`,
               st === state
-                ? tw`bg-slate-900 border-slate-900 shadow-2xs`
+                ? tw`bg-slate-900 border-slate-900`
                 : tw`bg-white border-slate-200`,
             ]}>
             <Text style={[tw`text-xs font-medium`, st === state ? tw`text-white font-semibold` : tw`text-slate-700`]}>
@@ -199,7 +199,11 @@ export default function MapScreen() {
       </ScrollView>
 
       {/* Map Container Viewport */}
-      <View style={tw`flex-1 mx-4 my-2 rounded-[20px] overflow-hidden border border-slate-200/90 shadow-sm bg-slate-100 relative`}>
+      <View
+        style={[
+          tw`flex-1 mx-4 my-2 rounded-[20px] overflow-hidden border border-slate-200/90 bg-slate-100 relative`,
+          { boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' },
+        ]}>
         <StationMap
           stations={shown}
           mode={mode}
@@ -210,7 +214,7 @@ export default function MapScreen() {
 
       {/* Selected Station Quick Preview Card */}
       {selectedStation && (
-        <Card style={tw`mx-4 mb-2 p-3.5 border-sky-300/80 bg-sky-50/40 shadow-sm`}>
+        <Card style={tw`mx-4 mb-2 p-3.5 border-sky-300/80 bg-sky-50/40`}>
           <View style={tw`flex-row items-start justify-between`}>
             <View style={tw`flex-1 pr-2`}>
               <View style={tw`flex-row items-center`}>
@@ -246,7 +250,7 @@ export default function MapScreen() {
                   params: { code: selectedStation.code },
                 })
               }
-              style={tw`bg-sky-600 hover:bg-sky-700 px-3 py-1 rounded-lg flex-row items-center shadow-2xs`}>
+              style={tw`bg-sky-600 hover:bg-sky-700 px-3 py-1 rounded-lg flex-row items-center`}>
               <Text style={tw`text-white text-xs font-semibold mr-1`}>Analytics</Text>
               <ArrowRight size={12} color="#fff" strokeWidth={2} />
             </Pressable>

@@ -142,10 +142,7 @@ export default function ChatBot() {
             backgroundColor: '#0284c7',
             alignItems: 'center',
             justifyContent: 'center',
-            shadowColor: '#0284c7',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.4,
-            shadowRadius: 12,
+            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.4)',
             elevation: 8,
           }}>
           <MessageCircle size={26} color="#fff" />
@@ -169,10 +166,7 @@ export default function ChatBot() {
           zIndex: 9999,
           borderRadius: 16,
           overflow: 'hidden',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.15,
-          shadowRadius: 24,
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
           elevation: 12,
           opacity: panelOpacity,
           transform: [{ translateY: panelTranslateY }],
@@ -325,10 +319,7 @@ export default function ChatBot() {
                   paddingVertical: 10,
                   borderWidth: m.role === 'assistant' ? 1 : 0,
                   borderColor: '#e2e8f0',
-                  shadowColor: '#000',
-                  shadowOpacity: 0.04,
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowRadius: 3,
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
                   elevation: 1,
                 }}>
                 <Text

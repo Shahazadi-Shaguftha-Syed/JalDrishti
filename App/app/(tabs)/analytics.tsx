@@ -132,7 +132,7 @@ export default function AnalyticsScreen() {
         )}
 
         {/* Station Search Input */}
-        <View style={tw`flex-row items-center bg-white rounded-xl px-3.5 mt-2 border border-slate-200 shadow-2xs`}>
+        <View style={tw`flex-row items-center bg-white rounded-xl px-3.5 mt-2 border border-slate-200`}>
           <Search size={16} color="#0284c7" strokeWidth={2} />
           <TextInput
             value={query}
@@ -157,7 +157,7 @@ export default function AnalyticsScreen() {
                 key={s.code}
                 onPress={() => setCode(s.code)}
                 style={[
-                  tw`mx-1 px-3.5 py-2.5 rounded-xl border shadow-2xs transition-all`,
+                  tw`mx-1 px-3.5 py-2.5 rounded-xl border`,
                   isSelected
                     ? tw`bg-sky-600 border-sky-700`
                     : tw`bg-white border-slate-200 hover:border-slate-300`,

@@ -24,7 +24,7 @@ export const Card = ({
 }) => (
   <View
     style={[
-      tw`bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs`,
+      tw`bg-white rounded-2xl p-3.5 border border-slate-200/80`,
       {
         boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02)',
       },
@@ -43,7 +43,8 @@ export const GlassCard = ({
 }) => (
   <View
     style={[
-      tw`bg-slate-900 rounded-2xl p-4.5 border border-slate-800 shadow-md`,
+      tw`bg-slate-900 rounded-2xl p-4.5 border border-slate-800`,
+      { boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)' },
       style,
     ]}>
     {children}
@@ -91,7 +92,7 @@ export const PulseBadge = ({
   active?: boolean;
 }) => (
   <View
-    style={tw`flex-row items-center bg-white border border-slate-200 rounded-full px-2.5 py-0.5 shadow-2xs`}>
+    style={tw`flex-row items-center bg-white border border-slate-200 rounded-full px-2.5 py-0.5`}>
     <View
       style={[
         tw`w-1.5 h-1.5 rounded-full mr-1.5`,
@@ -107,6 +108,81 @@ export const BlueBadge = ({ label }: { label: string }) => (
     <Text style={tw`text-[9px] font-semibold text-sky-700 uppercase tracking-wider`}>
       {label}
     </Text>
+  </View>
+);
+
+/* ── shadcn/ui-equivalent primitives ────────────────────────────────────────
+ * shadcn/ui itself is Radix + Tailwind on DOM nodes, so it cannot run under
+ * React Native. These reimplement the same component contracts and visual
+ * language (muted surface, hairline border, sm radius, tabular values) with RN
+ * primitives, so screens compose the same way they would on the web.
+ */
+
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'destructive' | 'success';
+
+const BADGE_VARIANTS: Record<BadgeVariant, { box: string; text: string }> = {
+  default: { box: 'bg-sky-600 border-sky-600', text: 'text-white' },
+  secondary: { box: 'bg-slate-100 border-slate-200', text: 'text-slate-700' },
+  outline: { box: 'bg-transparent border-slate-300', text: 'text-slate-600' },
+  destructive: { box: 'bg-rose-50 border-rose-200/80', text: 'text-rose-700' },
+  success: { box: 'bg-emerald-50 border-emerald-200/80', text: 'text-emerald-700' },
+};
+
+export const Badge = ({
+  label,
+  variant = 'secondary',
+}: {
+  label: string;
+  variant?: BadgeVariant;
+}) => {
+  const v = BADGE_VARIANTS[variant];
+  return (
+    <View style={tw`${v.box} border rounded-md px-2 py-0.5`}>
+      <Text style={tw`${v.text} text-[10px] font-semibold tracking-tight`}>{label}</Text>
+    </View>
+  );
+};
+
+export const Separator = ({ style }: { style?: any }) => (
+  <View style={[tw`h-px bg-slate-200/80 w-full`, style]} />
+);
+
+/** Segmented tab list — the shadcn TabsList / TabsTrigger pairing. */
+export const Tabs = <T extends string>({
+  value,
+  onChange,
+  items,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  items: { value: T; label: string }[];
+}) => (
+  <View style={tw`flex-row bg-slate-100 rounded-xl p-1`}>
+    {items.map((item) => {
+      const active = item.value === value;
+      return (
+        <Pressable
+          key={item.value}
+          onPress={() => onChange(item.value)}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: active }}
+          style={[
+            tw`flex-1 items-center justify-center rounded-lg py-1.5 px-1`,
+            active ? tw`bg-white border border-slate-200/70` : null,
+            active
+              ? { boxShadow: '0 1px 2px 0 rgba(15, 23, 42, 0.06)' }
+              : null,
+          ]}>
+          <Text
+            style={tw`text-[11px] font-semibold tracking-tight ${
+              active ? 'text-slate-900' : 'text-slate-500'
+            }`}
+            numberOfLines={1}>
+            {item.label}
+          </Text>
+        </Pressable>
+      );
+    })}
   </View>
 );
 
@@ -131,7 +207,7 @@ export const Stat = ({
 }) => (
   <View
     style={[
-      tw`bg-white rounded-xl p-3 border border-slate-200/80 shadow-2xs`,
+      tw`bg-white rounded-xl p-3 border border-slate-200/80`,
       {
         boxShadow: '0 1px 2px 0 rgba(15, 23, 42, 0.03)',
       },
@@ -263,7 +339,7 @@ export const AnomalyBadge = ({ anomaly }: { anomaly: string }) => (
 
 export const Loading = ({ label = 'Loading DWLR telemetry feed…' }: { label?: string }) => (
   <View style={tw`flex-1 items-center justify-center py-20 bg-slate-50`}>
-    <View style={tw`w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200/80 items-center justify-center mb-3 shadow-2xs`}>
+    <View style={tw`w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200/80 items-center justify-center mb-3`}>
       <ActivityIndicator size="small" color="#0284c7" />
     </View>
     <Text style={tw`text-sm font-semibold text-slate-800`}>{label}</Text>
@@ -298,7 +374,10 @@ export const ErrorState = ({
     {onRetry && (
       <Pressable
         onPress={onRetry}
-        style={tw`mt-4 bg-sky-600 hover:bg-sky-700 px-5 py-2.5 rounded-xl shadow-sm`}>
+        style={[
+          tw`mt-4 bg-sky-600 hover:bg-sky-700 px-5 py-2.5 rounded-xl`,
+          { boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' },
+        ]}>
         <Text style={tw`text-white text-xs font-semibold`}>Retry Connection</Text>
       </Pressable>
     )}

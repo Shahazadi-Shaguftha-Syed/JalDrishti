@@ -3,8 +3,10 @@ import { RefreshControl, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useWideLayout } from '@/components/AppShell';
-import { ArrowDown, ArrowUp, Award, Droplets, Info } from '@/components/Icons';
+import { BarChart3, Droplets, Info } from '@/components/Icons';
+import StateBarChart, { StateRow } from '@/components/StateBarChart';
 import {
+  Badge,
   Card,
   Empty,
   ErrorState,
@@ -13,23 +15,13 @@ import {
   PulseBadge,
   SectionTitle,
 } from '@/components/Ui';
-import { API_BASE, fmt, useApi } from '@/constants/api';
+import { API_BASE, useApi } from '@/constants/api';
 import tw from '@/constants/tailwind';
-
-interface StateRow {
-  state: string;
-  stations: number;
-  avg_trend: number | null;
-  avg_level: number | null;
-  avg_recharge: number | null;
-  at_risk: number;
-}
 
 export default function StatesScreen() {
   const wide = useWideLayout();
   const { data, error, loading, reload } = useApi<StateRow[]>('/states/');
   const rows = (data ?? []).filter((r) => r.stations > 0);
-  const worstTrend = Math.max(...rows.map((r) => Math.abs(r.avg_trend ?? 0)), 0.001);
 
   if (loading && !data) return <Loading label="Evaluating state groundwater benchmarks…" />;
   if (error && !data)
@@ -62,89 +54,16 @@ export default function StatesScreen() {
           </View>
         )}
 
-        {/* State Rankings List */}
+        {/* State Benchmark — metric-switchable bar chart */}
         <SectionTitle
-          title={`State Groundwater Vulnerability Index (${rows.length})`}
-          subtitle="Ranked from highest rate of depletion to fastest recovering"
-          icon={Award}
+          title="State Benchmark"
+          subtitle="Switch metric to re-rank every state against the national peak"
+          icon={BarChart3}
+          action={<Badge label={`${rows.length} states`} variant="secondary" />}
         />
-        <Card style={tw`py-1`}>
+        <Card style={tw`p-4`}>
           {rows.length ? (
-            rows.map((r, i) => {
-              const trend = r.avg_trend ?? 0;
-              const declining = trend > 0;
-              const atRiskPct = Math.round((r.at_risk / Math.max(r.stations, 1)) * 100);
-
-              return (
-                <View key={r.state} style={tw`py-3 px-3 border-b border-slate-100`}>
-                  <View style={tw`flex-row items-center justify-between`}>
-                    <View style={tw`flex-row items-center flex-1 pr-2`}>
-                      <View
-                        style={[
-                          tw`w-6 h-6 rounded-lg items-center justify-center mr-2.5`,
-                          i < 3 ? tw`bg-slate-900` : tw`bg-slate-100`,
-                        ]}>
-                        <Text
-                          style={[
-                            tw`text-xs font-semibold`,
-                            i < 3 ? tw`text-white` : tw`text-slate-600`,
-                          ]}>
-                          {i + 1}
-                        </Text>
-                      </View>
-                      <Text style={tw`text-sm font-semibold text-slate-900`}>{r.state}</Text>
-                    </View>
-
-                    <View
-                      style={[
-                        tw`flex-row items-center rounded-lg px-2 py-0.5 border`,
-                        declining ? tw`bg-rose-50 border-rose-200/70` : tw`bg-emerald-50 border-emerald-200/70`,
-                      ]}>
-                      {declining ? (
-                        <ArrowDown size={11} color="#dc2626" strokeWidth={2.5} />
-                      ) : (
-                        <ArrowUp size={11} color="#16a34a" strokeWidth={2.5} />
-                      )}
-                      <Text
-                        style={[
-                          tw`text-xs font-semibold ml-1`,
-                          declining ? tw`text-rose-700` : tw`text-emerald-700`,
-                        ]}>
-                        {Math.abs(trend).toFixed(2)} m/yr {declining ? 'fall' : 'rise'}
-                      </Text>
-                    </View>
-                  </View>
-
-                  {/* Relative Progress Bar */}
-                  <View style={tw`flex-row items-center mt-2 ml-8.5`}>
-                    <View style={tw`flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden mr-3`}>
-                      <View
-                        style={[
-                          tw`h-1.5 rounded-full`,
-                          {
-                            width: `${Math.min((Math.abs(trend) / worstTrend) * 100, 100)}%`,
-                            backgroundColor: declining ? '#ef4444' : '#10b981',
-                          },
-                        ]}
-                      />
-                    </View>
-                    <Text style={tw`text-[11px] font-medium text-slate-500`}>
-                      {r.stations} stations • <Text style={tw`font-semibold ${r.at_risk > 0 ? 'text-sky-700' : 'text-slate-600'}`}>{r.at_risk} at risk ({atRiskPct}%)</Text>
-                    </Text>
-                  </View>
-
-                  {/* Sub Metrics */}
-                  <View style={tw`flex-row items-center mt-1.5 ml-8.5`}>
-                    <Text style={tw`text-[10px] text-slate-400 mr-3 font-normal`}>
-                      Mean Level: <Text style={tw`text-slate-600 font-medium`}>{fmt(r.avg_level, 2, ' m bgl')}</Text>
-                    </Text>
-                    <Text style={tw`text-[10px] text-slate-400 font-normal`}>
-                      Avg Recharge: <Text style={tw`text-slate-600 font-medium`}>{fmt(r.avg_recharge, 0, ' mm')}</Text>
-                    </Text>
-                  </View>
-                </View>
-              );
-            })
+            <StateBarChart rows={rows} />
           ) : (
             <Empty label="No state data currently loaded" />
           )}

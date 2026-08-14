@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, { Circle, Line, Path, Polyline, Rect } from 'react-native-svg';
+import Svg, { Circle, Line, Path, Polygon, Polyline, Rect } from 'react-native-svg';
 
 interface IconProps {
   size?: number;
@@ -14,6 +14,15 @@ export const LayoutDashboard = ({ size = 20, color = '#64748b', strokeWidth = 2,
     <Rect width="7" height="5" x="14" y="3" rx="1" />
     <Rect width="7" height="9" x="14" y="12" rx="1" />
     <Rect width="7" height="5" x="3" y="16" rx="1" />
+  </Svg>
+);
+
+export const BarChart3 = ({ size = 20, color = '#64748b', strokeWidth = 2, style }: IconProps) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>
+    <Path d="M3 3v16a2 2 0 0 0 2 2h16" />
+    <Path d="M18 17V9" />
+    <Path d="M13 17V5" />
+    <Path d="M8 17v-3" />
   </Svg>
 );
 
@@ -256,10 +265,6 @@ export const Layers = ({ size = 20, color = '#64748b', strokeWidth = 2, style }:
     <Path d="m2 12 10 5 10-5" />
   </Svg>
 );
-
-function Polygon({ points }: { points: string }) {
-  return <Path d={`M${points.replace(/\s+/g, 'L')}Z`} />;
-}
 
 export const Server = ({ size = 20, color = '#64748b', strokeWidth = 2, style }: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>
